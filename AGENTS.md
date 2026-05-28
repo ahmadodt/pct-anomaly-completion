@@ -7,7 +7,7 @@ Guidance for coding agents working in this repository.
 This repo contains two older point-cloud deep learning experiments:
 
 - `Anomaly_detection/`: the main experiment. It trains a modified Point Cloud Transformer (PCT) on Anomaly-ShapeNet with two heads: object classification and anomaly/deformation classification.
-- `completion_decoder/`: a separate experimental masked-attention decoder on ModelNet10. It is not part of the main anomaly classifier workflow.
+- `completion_decoder/`: a separate point-cloud completion decoder on ModelNet10. It predicts synthetically removed local regions from partial point clouds.
 
 Prefer working on `Anomaly_detection/` unless the user explicitly asks about the completion decoder.
 
@@ -107,7 +107,7 @@ The code has a slow pure-PyTorch CPU fallback for farthest point sampling. Use i
 - `Anomaly_detection/train.py` contains notebook magic and calls undefined notebook-local helpers.
 - Dataset labels are inferred from folder/file names in `Anomaly_detection/data/dataset.py`.
 - Existing checkpoints and logs are historical experiment artifacts.
-- `completion_decoder/data.py` uses Unix-style commands for downloading ModelNet10 and may not work in plain Windows PowerShell.
+- `completion_decoder/` is a compact completion prototype, not a paper-quality model.
 
 ## Code Style
 

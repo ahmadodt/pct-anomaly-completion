@@ -3,7 +3,7 @@
 This repository contains two older point-cloud deep learning experiments:
 
 - `Anomaly_detection/`: the main project. It trains a modified Point Cloud Transformer (PCT) with two classification heads: object class and anomaly/deformation type.
-- `completion_decoder/`: a separate experimental masked-attention decoder for point-cloud completion-style prediction on ModelNet10.
+- `completion_decoder/`: a separate point-cloud completion decoder that predicts synthetically removed local regions on ModelNet10.
 
 The strongest runnable path is `Anomaly_detection/main.ipynb`. The Python scripts are useful for reference, but `Anomaly_detection/train.py` is notebook-derived and is not a clean standalone entry point.
 
@@ -97,4 +97,4 @@ jupyter notebook main.ipynb
 - `Anomaly_detection/main_partseg.py` references stale segmentation code.
 - Dataset paths were originally hardcoded; use `ANOMALY_SHAPENET_ROOT` for local data.
 - CPU farthest point sampling is for small checks only and will be slow for full training.
-- `completion_decoder/` is experimental and treats shuffled point clouds as sequences, which is not a standard point-cloud completion setup.
+- `completion_decoder/` is a compact research prototype that learns to reconstruct synthetically removed local regions from partial ModelNet10 point clouds.

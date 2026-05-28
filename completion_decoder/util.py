@@ -1,6 +1,9 @@
 import torch
 import torch.nn.functional as F
-# from pointnet2_ops import pointnet2_utils
+try:
+    from pointnet2_ops import pointnet2_utils
+except Exception:
+    pointnet2_utils = None
 
 
 def cal_loss(pred, gold, smoothing=True):
@@ -121,6 +124,28 @@ def knn_point(nsample, xyz, new_xyz):
     return group_idx
 
 
+def furthest_point_sample_cpu(xyz, npoint):
+    B, N, _ = xyz.shape
+    sample_count = min(npoint, N)
+    centroids = torch.zeros(B, sample_count, dtype=torch.long, device=xyz.device)
+    distance = torch.full((B, N), 1e10, device=xyz.device)
+    farthest = torch.randint(0, N, (B,), dtype=torch.long, device=xyz.device)
+    batch_indices = torch.arange(B, dtype=torch.long, device=xyz.device)
+
+    for i in range(sample_count):
+        centroids[:, i] = farthest
+        centroid = xyz[batch_indices, farthest, :].view(B, 1, 3)
+        dist = torch.sum((xyz - centroid) ** 2, dim=-1)
+        distance = torch.minimum(distance, dist)
+        farthest = torch.max(distance, dim=-1)[1]
+
+    if sample_count < npoint:
+        pad_idx = torch.randint(0, sample_count, (B, npoint - sample_count), device=xyz.device)
+        centroids = torch.cat([centroids, torch.gather(centroids, 1, pad_idx)], dim=1)
+
+    return centroids
+
+
 def sample_and_group(npoint, radius, nsample, xyz, points):
     """
     Input:
@@ -137,7 +162,10 @@ def sample_and_group(npoint, radius, nsample, xyz, points):
     S = npoint
     xyz = xyz.contiguous()
 
-    fps_idx = pointnet2_utils.furthest_point_sample(xyz, npoint).long()  # [B, npoint]
+    if pointnet2_utils is not None and xyz.is_cuda:
+        fps_idx = pointnet2_utils.furthest_point_sample(xyz, npoint).long()  # [B, npoint]
+    else:
+        fps_idx = furthest_point_sample_cpu(xyz, npoint)
     new_xyz = index_points(xyz, fps_idx)
     new_points = index_points(points, fps_idx)
     # new_xyz = xyz[:]

@@ -1,9 +1,8 @@
-torch==1.13.1
+torch
 scipy
 scikit-learn
 trimesh
 open3d
-trimesh
 pandas
 pyntcloud
 addict
