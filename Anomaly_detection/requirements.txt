@@ -1,0 +1,10 @@
+torch
+scipy
+scikit-learn
+trimesh
+open3d
+pandas
+pyntcloud
+addict
+matplotlib
+numpy

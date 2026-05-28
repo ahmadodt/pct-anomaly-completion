@@ -1,0 +1,6 @@
+.venv/
+.venv311/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+Anomaly_detection/data/data/

@@ -1,0 +1,10 @@
+torch==1.13.1
+scipy
+scikit-learn
+trimesh
+open3d
+trimesh
+pandas
+pyntcloud
+addict
+matplotlib
